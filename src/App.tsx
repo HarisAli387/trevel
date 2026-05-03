@@ -141,7 +141,8 @@ export default function App() {
       setItinerary(result);
     } catch (error) {
       console.error(error);
-      setItinerary("An error occurred while generating your itinerary. Please try again.");
+      const message = error instanceof Error ? error.message : 'Please try again.';
+      setItinerary(`An error occurred while generating your itinerary. ${message}`);
     } finally {
       setLoading(false);
     }
