@@ -1,0 +1,6 @@
+{
+  "name": "AI Trip Planner",
+  "description": "An intelligent trip planner that generates personalized itineraries, booking suggestions, and packing reminders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
