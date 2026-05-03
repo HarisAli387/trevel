@@ -121,6 +121,7 @@ app.post('/api/itinerary', async (req, res) => {
 
   try {
     const prompt = buildItineraryPrompt({ destination, duration, vibe, budget });
+    console.log('Calling Gemini API for destination:', destination);
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
@@ -129,17 +130,15 @@ app.post('/api/itinerary', async (req, res) => {
       },
     });
 
+    console.log('Gemini API successful');
     return res.json({ itinerary: response.text || '' });
   } catch (error) {
     const message = String(error);
-    const invalidKey = message.includes('API key not valid') || message.includes('API_KEY_INVALID');
-
-    if (invalidKey) {
-      return res.json({ itinerary: createMockItinerary({ destination, duration, vibe, budget }), warning: 'Invalid API key. Serving a local mock itinerary instead.' });
-    }
-
-    console.error('AI request failed:', error);
-    return res.status(500).json({ error: 'Failed to generate itinerary. Check server logs.' });
+    console.error('Gemini API error:', message.substring(0, 300));
+    
+    // Always fall back to mock itinerary on any Gemini error
+    console.log('Falling back to mock itinerary due to API error');
+    return res.json({ itinerary: createMockItinerary({ destination, duration, vibe, budget }), warning: 'Serving a local sample itinerary. Please check your Gemini API key.' });
   }
 });
 
